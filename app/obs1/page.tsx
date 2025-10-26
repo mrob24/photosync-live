@@ -8,7 +8,6 @@ export default function CollagePage() {
   const [photos, setPhotos] = useState<Photo[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
-  const [autoScroll, setAutoScroll] = useState(true)
   const supabase = createClient()
 
   useEffect(() => {
@@ -62,52 +61,6 @@ export default function CollagePage() {
     }
   }, [supabase])
 
-  // Auto-scroll lento
-  useEffect(() => {
-    if (!autoScroll) return
-
-    const pixelsPerSecond = 10 // Ajusta este valor: 10=muy lento, 30=lento, 50=medio
-    let lastTime = performance.now()
-    let animationFrameId: number
-
-    const scroll = (currentTime: number) => {
-      const deltaTime = (currentTime - lastTime) / 1000 // convertir a segundos
-      const scrollAmount = pixelsPerSecond * deltaTime
-      
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
-      
-      if (window.scrollY >= maxScroll - 10) {
-        // Volver arriba suavemente cuando llega al final
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-        setTimeout(() => {
-          lastTime = performance.now()
-          animationFrameId = requestAnimationFrame(scroll)
-        }, 2000) // Pausa de 2 segundos antes de reiniciar
-      } else {
-        window.scrollBy(0, scrollAmount)
-        lastTime = currentTime
-        animationFrameId = requestAnimationFrame(scroll)
-      }
-    }
-
-    animationFrameId = requestAnimationFrame(scroll)
-
-    // Pausar auto-scroll si el usuario interactúa
-    const handleInteraction = () => {
-      setAutoScroll(false)
-      setTimeout(() => setAutoScroll(true), 5000) // Reanudar después de 5 segundos
-    }
-
-    window.addEventListener('wheel', handleInteraction)
-    window.addEventListener('touchstart', handleInteraction)
-
-    return () => {
-      cancelAnimationFrame(animationFrameId)
-      window.removeEventListener('wheel', handleInteraction)
-      window.removeEventListener('touchstart', handleInteraction)
-    }
-  }, [autoScroll])
-
   // Generar tamaños dinámicos para el collage
   const getPhotoLayout = (index: number) => {
     const patterns = [
@@ -144,62 +97,73 @@ export default function CollagePage() {
     )
   }
 
+  // Duplicar fotos para crear loop infinito
+  const duplicatedPhotos = [...photos, ...photos]
+
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-black">
-        {/* Header */}
-        <div className="sticky top-0 z-40 bg-black/60 backdrop-blur-xl border-b border-white/5 h-16 flex items-center shadow-sm">
-          <div className="max-w-[1600px] mx-auto px-6 py-5">
+      <div className="fixed inset-0 bg-gradient-to-br from-black via-zinc-900 to-black overflow-hidden">
+        {/* Header fijo */}
+        <div className="absolute top-0 left-0 right-0 z-40 bg-black/60 backdrop-blur-xl border-b border-white/5 h-16 flex items-center shadow-sm">
+          <div className="max-w-[1600px] mx-auto px-6 w-full">
             <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-white/40 animate-pulse"></div>
+                <span className="text-white/40 text-xs">Auto-scroll</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Collage Masonry Grid */}
-        <div className="max-w-[1600px] mx-auto px-6 py-8">
-          <div className="grid grid-cols-4 auto-rows-auto gap-3">
-            {photos.map((photo, idx) => {
-              const layout = getPhotoLayout(idx)
-              
-              return (
-                <div
-                  key={photo.id}
-                  className={`${layout.span} ${layout.height} group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-500 hover:scale-[1.02] hover:z-10`}
-                  style={{
-                    animationDelay: `${idx * 80}ms`,
-                  }}
-                  onClick={() => setSelectedPhoto(photo)}
-                >
-                  <img
-                    src={photo.file_url || "/placeholder.svg"}
-                    alt={`Foto ${idx + 1}`}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
+        {/* Contenedor con animación de scroll infinito */}
+        <div className="absolute inset-0 pt-16 overflow-hidden">
+          <div className="animate-infinite-scroll">
+            <div className="max-w-[1600px] mx-auto px-6 py-8">
+              <div className="grid grid-cols-4 auto-rows-auto gap-3">
+                {duplicatedPhotos.map((photo, idx) => {
+                  const layout = getPhotoLayout(idx)
                   
-                  {/* Overlay gradiente siempre visible */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <p className="text-white text-sm font-light mb-1 drop-shadow-lg">
-                        {new Date(photo.created_at).toLocaleDateString("es-ES", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </p>
-                      <p className="text-white/70 text-xs drop-shadow-lg">
-                        {new Date(photo.created_at).toLocaleTimeString("es-ES", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    </div>
-                  </div>
+                  return (
+                    <div
+                      key={`${photo.id}-${idx}`}
+                      className={`${layout.span} ${layout.height} group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-500 hover:scale-[1.02] hover:z-10`}
+                      style={{
+                        animationDelay: `${idx * 80}ms`,
+                      }}
+                      onClick={() => setSelectedPhoto(photo)}
+                    >
+                      <img
+                        src={photo.file_url || "/placeholder.svg"}
+                        alt={`Foto ${idx + 1}`}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      
+                      {/* Overlay gradiente siempre visible */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <p className="text-white text-sm font-light mb-1 drop-shadow-lg">
+                            {new Date(photo.created_at).toLocaleDateString("es-ES", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            })}
+                          </p>
+                          <p className="text-white/70 text-xs drop-shadow-lg">
+                            {new Date(photo.created_at).toLocaleTimeString("es-ES", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </p>
+                        </div>
+                      </div>
 
-                  {/* Borde sutil */}
-                  <div className="absolute inset-0 border border-white/5 rounded-xl pointer-events-none"></div>
-                </div>
-              )
-            })}
+                      {/* Borde sutil */}
+                      <div className="absolute inset-0 border border-white/5 rounded-xl pointer-events-none"></div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -268,8 +232,25 @@ export default function CollagePage() {
           }
         }
 
+        @keyframes infinite-scroll {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-50%);
+          }
+        }
+
         .animate-fade-in {
           animation: fade-in 0.3s ease-out;
+        }
+
+        .animate-infinite-scroll {
+          animation: infinite-scroll 120s linear infinite;
+        }
+
+        .animate-infinite-scroll:hover {
+          animation-play-state: paused;
         }
 
         .grid > div {
