@@ -86,8 +86,8 @@ export default function OBSPage() {
       setTimeout(() => {
         setCurrentIndex(next)
         setIsTransitioning(false)
-      }, 1500)
-    }, 7000)
+      }, 1000)
+    }, 4000)
 
     return () => clearInterval(interval)
   }, [photos.length, currentIndex])
