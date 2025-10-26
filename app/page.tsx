@@ -25,51 +25,42 @@ export default function Home() {
 
   if (isMobile) {
     return (
-      <div className="h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black flex flex-col relative overflow-hidden">
-        {/* Efecto de fondo animado */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.03),transparent_50%)] animate-pulse"></div>
-
-        {/* Mensaje de éxito flotante */}
+      <div className="h-screen bg-black flex flex-col relative overflow-hidden">
+        {/* Mensaje de éxito minimalista */}
         {uploadSuccess && (
-          <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-white/10 backdrop-blur-xl border border-white/20 text-white px-8 py-4 rounded-full shadow-2xl animate-in fade-in slide-in-from-top-4 duration-500">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-light tracking-wider">Foto subida exitosamente</span>
+          <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-white/5 backdrop-blur-sm border border-white/10 text-white px-6 py-3 rounded-full animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
+              <span className="text-xs font-light tracking-wide">Subida exitosa</span>
             </div>
           </div>
         )}
 
-        {/* Mensaje de error flotante */}
+        {/* Mensaje de error minimalista */}
         {error && (
-          <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-red-500/20 backdrop-blur-xl border border-red-500/30 text-red-200 px-8 py-4 rounded-full shadow-2xl animate-in fade-in slide-in-from-top-4 duration-500">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-              <span className="text-sm font-light tracking-wider">{error}</span>
-            </div>
+          <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-red-500/10 backdrop-blur-sm border border-red-500/20 text-red-300 px-6 py-3 rounded-full animate-in fade-in slide-in-from-top-2 duration-300">
+            <span className="text-xs font-light tracking-wide">{error}</span>
           </div>
         )}
 
-        {/* Contenido central */}
+        {/* Contenido central ultra minimalista */}
         <div className="flex-1 flex flex-col items-center justify-center px-8 relative z-10">
-          <div className="text-center space-y-8 animate-in fade-in zoom-in duration-700">
-            {/* Icono de cámara con efecto glow */}
-            <div className="relative inline-flex items-center justify-center">
-              <div className="absolute inset-0 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
-              <div className="relative inline-flex items-center justify-center w-40 h-40 rounded-full bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-2xl">
-                <Camera className="w-20 h-20 text-white/90" strokeWidth={1.5} />
-              </div>
+          <div className="text-center space-y-12 animate-in fade-in duration-1000">
+            {/* Icono simple */}
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full border border-white/10">
+              <Camera className="w-10 h-10 text-white/80" strokeWidth={1} />
             </div>
 
-            {/* Título y subtítulo con tipografía elegante */}
-            <div className="space-y-3">
-              <h1 className="text-4xl font-extralight text-white tracking-[0.2em] uppercase">PhotoSync</h1>
-              <div className="h-px w-24 mx-auto bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-              <p className="text-white/50 text-sm font-light tracking-[0.3em] uppercase">Galería Novack</p>
+            {/* Texto minimalista */}
+            <div className="space-y-4">
+              <h1 className="text-2xl font-extralight text-white tracking-[0.4em] uppercase">PhotoSync</h1>
+              <div className="h-px w-16 mx-auto bg-white/20"></div>
+              <p className="text-white/40 text-xs font-light tracking-[0.4em] uppercase">Novack</p>
             </div>
           </div>
         </div>
 
-        {/* Botones flotantes abajo */}
+        {/* Botón de cámara */}
         <CameraCapture onPhotoCapture={handlePhotoCapture} isUploading={isUploading} />
       </div>
     )
