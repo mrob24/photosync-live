@@ -60,30 +60,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Botón minimalista + */}
-        <div className="pb-12 flex justify-center">
-          <button
-            onClick={() => {
-              const input = document.createElement('input')
-              input.type = 'file'
-              input.accept = 'image/*'
-              input.capture = 'environment'
-              input.onchange = (e) => {
-                const file = (e.target as HTMLInputElement).files?.[0]
-                if (file) handlePhotoCapture(file)
-              }
-              input.click()
-            }}
-            disabled={isUploading}
-            className="w-16 h-16 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm flex items-center justify-center text-white text-3xl font-extralight hover:bg-white/10 active:scale-95 transition-all duration-200 disabled:opacity-50"
-          >
-            {isUploading ? (
-              <div className="w-5 h-5 border border-white/30 border-t-white rounded-full animate-spin"></div>
-            ) : (
-              '+'
-            )}
-          </button>
-        </div>
+        {/* Botón de cámara */}
+        <CameraCapture onPhotoCapture={handlePhotoCapture} isUploading={isUploading} />
       </div>
     )
   }
