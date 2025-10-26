@@ -26,6 +26,10 @@ export default function Home() {
   if (isMobile) {
     return (
       <div className="h-screen bg-black flex flex-col relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(120,119,198,0.1),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(139,92,246,0.1),transparent_50%)]"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
         {/* Mensaje de éxito minimalista */}
         {uploadSuccess && (
           <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-white/5 backdrop-blur-sm border border-white/10 text-white px-6 py-3 rounded-full animate-in fade-in slide-in-from-top-2 duration-300">
@@ -50,13 +54,7 @@ export default function Home() {
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full border border-white/10">
               <Camera className="w-10 h-10 text-white/80" strokeWidth={1} />
             </div>
-
-            {/* Texto minimalista */}
-            <div className="space-y-4">
-              <h1 className="text-2xl font-extralight text-white tracking-[0.4em] uppercase">PhotoSync</h1>
-              <div className="h-px w-16 mx-auto bg-white/20"></div>
-              <p className="text-white/40 text-xs font-light tracking-[0.4em] uppercase">Novack</p>
-            </div>
+            
           </div>
         </div>
 

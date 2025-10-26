@@ -68,17 +68,6 @@ export function CameraCapture({ onPhotoCapture, isUploading }: CameraCaptureProp
       />
 
       <div className="fixed bottom-8 left-0 right-0 px-8 flex items-center justify-between gap-4 z-40">
-        {/* Botón izquierdo: Tomar foto */}
-        <Button
-          onClick={openCamera}
-          disabled={isUploading}
-          size="lg"
-          className="flex-1 h-16 bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/20 text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/10 disabled:opacity-30 disabled:scale-100 font-light tracking-wider"
-        >
-          <Camera className="w-6 h-6 mr-3" strokeWidth={1.5} />
-          <span className="text-sm uppercase tracking-[0.2em]">Tomar</span>
-        </Button>
-
         {/* Botón derecho: Galería */}
         <Button
           onClick={openGallery}
@@ -87,7 +76,7 @@ export function CameraCapture({ onPhotoCapture, isUploading }: CameraCaptureProp
           className="flex-1 h-16 bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/20 text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/10 disabled:opacity-30 disabled:scale-100 font-light tracking-wider"
         >
           <ImageIcon className="w-6 h-6 mr-3" strokeWidth={1.5} />
-          <span className="text-sm uppercase tracking-[0.2em]">Galería</span>
+          <span className="text-sm uppercase tracking-[0.2em]">Subir foto</span>
         </Button>
       </div>
 
